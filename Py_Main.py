@@ -16,3 +16,18 @@ df = df.loc['2022-01-01':'2026-01-01']
 df = df[['Open', 'High', 'Low', 'Close', 'Volume']].dropna()
 
 print(df)
+
+# Calculating Moving Averages
+short_window = 20
+long_window = 50
+
+# Calculating 20-day and 50-day Simple Moving Averages of Close prices
+df['SMA_short'] = df['Close'].rolling(window=short_window).mean()
+df['SMA_long'] = df['Close'].rolling(window=long_window).mean()
+
+# Setting position to 1 (In Market) when Short SMA > Long SMA, else 0 (Cash)
+df['Position'] = np.where(df['SMA_short'] > df['SMA_long'], 1, 0)
+
+# Detecting position state changes and making Stock Signals: +1 = Buy , 0 = Hold, -1 = Sell
+df['Signal'] = df['Position'].diff()
+
