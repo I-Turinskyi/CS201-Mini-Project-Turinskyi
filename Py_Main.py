@@ -31,3 +31,12 @@ df['Position'] = np.where(df['SMA_short'] > df['SMA_long'], 1, 0)
 # Detecting position state changes and making Stock Signals: +1 = Buy , 0 = Hold, -1 = Sell
 df['Signal'] = df['Position'].diff()
 
+# Daily market percentage return
+df['Market_Returns'] = df['Close'].pct_change()
+
+# Finding returns from the chosen strategy, shifting 1 day ahead
+df['Strategy_Returns'] = df['Market_Returns'] * df['Position'].shift(1)
+
+# Compounded cumulative growth over time for the Market(basic holding of a stock) and for our Strategy
+df['Cumulative_Market'] = (1 + df['Market_Returns']).cumprod() - 1
+df['Cumulative_Strategy'] = (1 + df['Strategy_Returns']).cumprod() - 1
