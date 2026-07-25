@@ -76,5 +76,5 @@ plt.ylabel('Price ($)')
 plt.legend(loc='upper left')
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-
+#plt.savefig('schedules_sma_crossover.png', dpi=300, bbox_inches='tight')
 plt.show()
