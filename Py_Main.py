@@ -15,11 +15,9 @@ df = df.loc['2022-01-01':'2026-01-01']
 # Retain required OHLCV columns and drop missing values
 df = df[['Open', 'High', 'Low', 'Close', 'Volume']].dropna()
 
-print(df)
-
 # Calculating Moving Averages
-short_window = 20
-long_window = 50
+short_window = 4
+long_window = 100
 
 # Calculating 20-day and 50-day Simple Moving Averages of Close prices
 df['SMA_short'] = df['Close'].rolling(window=short_window).mean()
@@ -40,3 +38,18 @@ df['Strategy_Returns'] = df['Market_Returns'] * df['Position'].shift(1)
 # Compounded cumulative growth over time for the Market(basic holding of a stock) and for our Strategy
 df['Cumulative_Market'] = (1 + df['Market_Returns']).cumprod() - 1
 df['Cumulative_Strategy'] = (1 + df['Strategy_Returns']).cumprod() - 1
+
+# Getting the final overall change/effect of the strategy:
+market_perf = df['Cumulative_Market'].iloc[-1] * 100
+strategy_perf = df['Cumulative_Strategy'].iloc[-1] * 100
+# 2. Counting Buy and Sell events
+num_buys  = (df['Signal'] == 1).sum()
+num_sells = (df['Signal'] == -1).sum()
+
+print("       STRATEGY PERFORMANCE SUMMARY       ")
+print(f"Target Asset:                AAPL")
+print(f"Time Horizon:                2022 - 2026")
+print(f"Buy & Hold Market Return:    {market_perf:.2f}%")
+print(f"SMA Crossover Strategy:      {strategy_perf:.2f}%")
+print(f"Total Buy Orders:            {num_buys}")
+print(f"Total Sell Orders:           {num_sells}")
