@@ -53,3 +53,28 @@ print(f"Buy & Hold Market Return:    {market_perf:.2f}%")
 print(f"SMA Crossover Strategy:      {strategy_perf:.2f}%")
 print(f"Total Buy Orders:            {num_buys}")
 print(f"Total Sell Orders:           {num_sells}")
+
+
+# Plotting the strategy execution chart
+plt.figure(figsize=(12, 6))
+
+# Primary price curve and trendlines
+plt.plot(df.index, df['Close'], label='AAPL Close Price', alpha=0.35, color='gray')
+plt.plot(df.index, df['SMA_short'], label=f'SMA {short_window} (Short)', color='blue', linewidth=1.5)
+plt.plot(df.index, df['SMA_long'], label=f'SMA {long_window} (Long)', color='orange', linewidth=1.5)
+
+# Separate Buy (+1) and Sell (-1) markers
+buy_signals = df[df['Signal'] == 1]
+sell_signals = df[df['Signal'] == -1]
+
+plt.plot(buy_signals.index, buy_signals['SMA_short'], '^', markersize=9, color='green', label='Buy Signal', lw=0)
+plt.plot(sell_signals.index, sell_signals['SMA_short'], 'v', markersize=9, color='red', label='Sell Signal', lw=0)
+
+plt.title('AAPL Moving Average Crossover Strategy (Offline Data Execution)')
+plt.xlabel('Date')
+plt.ylabel('Price ($)')
+plt.legend(loc='upper left')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+
+plt.show()
